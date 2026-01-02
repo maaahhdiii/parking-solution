@@ -1,72 +1,118 @@
-# GESTION DE PARKING EN C
+# 🚗 Système de Gestion de Parking en C
 
-## Structure du projet
+Application complète de gestion de parking développée en langage C, avec deux implémentations distinctes : version statique (tableaux) et version dynamique (listes chaînées).
 
-Le projet contient deux versions distinctes:
+## 📋 Table des matières
 
-### Version Statique (Tableaux)
-- `version_statique/vehicle.h` - Definitions de structure Vehicle
-- `version_statique/parking.h` - Interface du module parking
-- `version_statique/parking.c` - Implementation du module parking
-- `version_statique/statistics.h` - Interface du module statistiques
-- `version_statique/statistics.c` - Implementation du module statistiques
-- `version_statique/main.c` - Programme principal avec menus
-- `version_statique/Makefile` - Fichier de compilation
-- `version_statique/compile.bat` - Script de compilation Windows
+- [Aperçu](#aperçu)
+- [Fonctionnalités](#fonctionnalités)
+- [Structure du projet](#structure-du-projet)
+- [Compilation et exécution](#compilation-et-exécution)
+- [Utilisation](#utilisation)
+- [Caractéristiques techniques](#caractéristiques-techniques)
 
-### Version Dynamique (Listes chainees)
-- `version_dynamique/vehicle.h` - Definitions de structure Vehicle avec pointeur next
-- `version_dynamique/parking.h` - Interface du module parking
-- `version_dynamique/parking.c` - Implementation avec listes chainees
-- `version_dynamique/statistics.h` - Interface du module statistiques
-- `version_dynamique/statistics.c` - Implementation du module statistiques
-- `version_dynamique/main.c` - Programme principal avec menus
-- `version_dynamique/Makefile` - Fichier de compilation
-- `version_dynamique/compile.bat` - Script de compilation Windows
+## 🎯 Aperçu
 
-## Compilation
+Ce projet implémente un système complet de gestion de parking permettant de :
+- Gérer les entrées et sorties de véhicules
+- Calculer automatiquement les montants à payer
+- Suivre les statistiques du parking en temps réel
+- Administrer jusqu'à 50 places de stationnement
 
-### Avec Make
+## ✨ Fonctionnalités
+
+### Gestion des véhicules
+- ➕ **Ajouter un véhicule** : Enregistrement d'un nouveau véhicule avec ses caractéristiques
+- ❌ **Supprimer un véhicule** : Suppression d'un enregistrement
+- 🔍 **Rechercher un véhicule** : Recherche par plaque d'immatriculation
+- 📋 **Afficher tous les véhicules** : Liste complète des véhicules présents
+- 🚪 **Enregistrer une sortie** : Calcul automatique du montant à payer basé sur la durée et le tarif horaire
+- ✏️ **Modifier un véhicule** : Mise à jour des informations
+
+### Statistiques
+- 📊 Capacité totale du parking
+- 🟢 Nombre de places disponibles
+- 🔴 Nombre de places occupées
+- 📈 Total des véhicules entrés et sortis
+- 📉 Taux d'occupation moyen
+- 💰 Revenu total collecté
+
+### Informations véhicule
+Chaque véhicule est caractérisé par :
+- `ID` - Identifiant unique
+- `Plaque` - Numéro d'immatriculation
+- `Marque` - Marque du véhicule
+- `Couleur` - Couleur du véhicule
+- `Heure d'arrivée` - Heure d'entrée au parking
+- `Tarif horaire` - Tarif de stationnement par heure
+- `Statut` - Présent ou sorti
+
+## 📁 Structure du projet
+
 ```
-cd version_statique
-make
-```
-ou
-```
-cd version_dynamique
-make
+parking-solution/
+│
+├── version_statique/          # Version avec tableaux
+│   ├── vehicle.h             # Structure Vehicle
+│   ├── parking.h             # Interface module parking
+│   ├── parking.c             # Implémentation parking (tableaux)
+│   ├── statistics.h          # Interface module statistiques
+│   ├── statistics.c          # Implémentation statistiques
+│   ├── main.c                # Programme principal
+│   └── parking.cbp           # Projet Code::Blocks
+│
+├── version_dynamique/         # Version avec listes chaînées
+│   ├── vehicle.h             # Structure Vehicle avec pointeur next
+│   ├── parking.h             # Interface module parking
+│   ├── parking.c             # Implémentation parking (listes chaînées)
+│   ├── statistics.h          # Interface module statistiques
+│   ├── statistics.c          # Implémentation statistiques
+│   ├── main.c                # Programme principal
+│   └── parking.cbp           # Projet Code::Blocks
+│
+└── README.md                  # Documentation
 ```
 
-### Avec script batch (Windows)
-```
-cd version_statique
-compile.bat
-```
-ou
-```
-cd version_dynamique
-compile.bat
-```
+## 🛠️ Compilation et exécution
+
+### Avec Code::Blocks (Recommandé)
+
+1. Ouvrez Code::Blocks
+2. `File` → `Open` → Sélectionnez `parking.cbp` dans le dossier voulu
+3. `Build` → `Build` (F9)
+4. `Build` → `Run` (Ctrl+F10)
 
 ### Compilation manuelle
-```
+
+```bash
+cd version_statique
 gcc -Wall -Wextra -std=c99 -o parking.exe main.c parking.c statistics.c
-```
-
-## Execution
-
-```
 ./parking.exe
 ```
 
-## Fonctionnalites
+ou
 
-### Menu Principal
+```bash
+cd version_dynamique
+gcc -Wall -Wextra -std=c99 -o parking.exe main.c parking.c statistics.c
+./parking.exe
+```
+
+## 💻 Utilisation
+
+### Menu principal
+```
+=================================
+   GESTION DE PARKING
+=================================
 1. Gestion des vehicules
 2. Statistiques
 3. Quitter
+```
 
-### Gestion des vehicules
+### Menu gestion des véhicules
+```
+=== Gestion des vehicules ===
 1. Ajouter un vehicule
 2. Supprimer un vehicule
 3. Rechercher un vehicule
@@ -74,23 +120,59 @@ gcc -Wall -Wextra -std=c99 -o parking.exe main.c parking.c statistics.c
 5. Enregistrer une sortie
 6. Modifier un vehicule
 7. Retour au menu principal
+```
 
-### Statistiques
-- Capacite totale
-- Places occupees et disponibles
-- Total vehicules entres et sortis
-- Taux d'occupation moyen
-- Revenu total collecte
+### Exemple d'utilisation
 
-## Caracteristiques techniques
+1. **Ajouter un véhicule**
+   - Saisir l'ID, la plaque, la marque, la couleur
+   - Indiquer l'heure d'arrivée et le tarif horaire
+
+2. **Enregistrer une sortie**
+   - Saisir l'ID du véhicule
+   - Indiquer l'heure de sortie
+   - Le système calcule automatiquement le montant à payer
+
+3. **Consulter les statistiques**
+   - Voir l'occupation en temps réel
+   - Suivre les revenus générés
+
+## 🔧 Caractéristiques techniques
 
 ### Version Statique
-- Utilise des tableaux fixes (MAX_PLACES = 50)
-- Allocation memoire statique
-- Recherche lineaire dans le tableau
+- **Structure de données** : Tableaux fixes
+- **Capacité** : 50 places (MAX_PLACES)
+- **Allocation mémoire** : Statique
+- **Algorithme de recherche** : Recherche linéaire
+- **Complexité recherche** : O(n)
 
 ### Version Dynamique
-- Utilise des listes chainees
-- Allocation memoire dynamique avec malloc
-- Liberation memoire avec free
-- Insertion en tete de liste
+- **Structure de données** : Listes chaînées
+- **Capacité** : 50 places (MAX_PLACES)
+- **Allocation mémoire** : Dynamique avec `malloc()`
+- **Libération mémoire** : Avec `free()`
+- **Insertion** : En tête de liste
+- **Complexité recherche** : O(n)
+
+### Compilation
+- **Standard** : C99
+- **Options** : `-Wall -Wextra` (tous les avertissements)
+- **Compilateur** : GCC compatible
+
+## 📝 Architecture modulaire
+
+Le code est organisé en modules séparés pour une meilleure maintenabilité :
+
+- **vehicle.h** : Définition de la structure Vehicle
+- **parking.h/.c** : Gestion du parking (ajout, suppression, recherche)
+- **statistics.h/.c** : Calcul et affichage des statistiques
+- **main.c** : Interface utilisateur et menus
+
+## 🎓 Projet académique
+
+Ce projet a été développé dans le cadre d'un exercice de programmation en C, démontrant :
+- La maîtrise des structures de données
+- L'utilisation des pointeurs
+- La gestion de la mémoire dynamique
+- La programmation modulaire
+- Les bonnes pratiques de développement
