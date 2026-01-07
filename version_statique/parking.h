@@ -1,27 +1,33 @@
 #ifndef PARKING_H
 #define PARKING_H
 
-#include "vehicle.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "vehicule.h"
 
 #define MAX_PLACES 50
+#define MAX_VEHICLES 100
 
 typedef struct {
-    Vehicle vehicles[MAX_PLACES];
-    int nb_vehicles;
-    int capacite_max;
-    float montant_total;
+    Vehicule vehicules[MAX_VEHICLES];
+    int nombre_vehicules;
+    int places_occupees;
+    float revenu_total;
     int total_entrees;
     int total_sorties;
 } Parking;
 
-void init_parking(Parking* p);
-int ajouter_vehicle(Parking* p, Vehicle v);
-int supprimer_vehicle(Parking* p, int id);
-int sortie_vehicle(Parking* p, int id, int heure_sortie);
-Vehicle* rechercher_vehicle(Parking* p, char* plaque);
-void modifier_vehicle(Parking* p, int id, Vehicle v);
-void afficher_vehicles(Parking* p);
-int places_disponibles(Parking* p);
-int places_occupees(Parking* p);
+void initialiser_parking(Parking *parking);
+int ajouter_vehicule(Parking *parking, char *plaque, char *marque, char *couleur, float tarif);
+int supprimer_vehicule(Parking *parking, char *plaque);
+Vehicule* rechercher_vehicule(Parking *parking, char *plaque);
+void afficher_vehicules_presents(Parking *parking);
+int enregistrer_sortie(Parking *parking, char *plaque);
+void afficher_places_disponibles(Parking *parking);
+void afficher_revenu_total(Parking *parking);
+void afficher_menu_principal();
+void afficher_menu_vehicules();
 
 #endif

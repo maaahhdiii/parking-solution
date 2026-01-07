@@ -1,117 +1,158 @@
-#include <stdio.h>
-#include <string.h>
 #include "parking.h"
+#include "vehicule.h"
 
-void init_parking(Parking* p) {
-    p->nb_vehicles = 0;
-    p->capacite_max = MAX_PLACES;
-    p->montant_total = 0.0;
-    p->total_entrees = 0;
-    p->total_sorties = 0;
+void initialiser_parking(Parking *parking) {
+    parking->nombre_vehicules = 0;
+    parking->places_occupees = 0;
+    parking->revenu_total = 0.0;
+    parking->total_entrees = 0;
+    parking->total_sorties = 0;
 }
 
-int ajouter_vehicle(Parking* p, Vehicle v) {
-    if (p->nb_vehicles >= p->capacite_max) {
+int ajouter_vehicule(Parking *parking, char *plaque, char *marque, char *couleur, float tarif) {
+    if (parking->places_occupees >= MAX_PLACES) {
+        printf("Erreur: Le parking est complet!\n");
         return 0;
     }
-    v.statut = 1;
-    p->vehicles[p->nb_vehicles] = v;
-    p->nb_vehicles++;
-    p->total_entrees++;
+    
+    if (parking->nombre_vehicules >= MAX_VEHICLES) {
+        printf("Erreur: Nombre maximum de vehicules atteint!\n");
+        return 0;
+    }
+    
+    if (rechercher_vehicule(parking, plaque) != NULL) {
+        printf("Erreur: Un vehicule avec cette plaque existe deja!\n");
+        return 0;
+    }
+    
+    Vehicule *v = &parking->vehicules[parking->nombre_vehicules];
+    v->id = parking->nombre_vehicules + 1;
+    strcpy(v->plaque, plaque);
+    strcpy(v->marque, marque);
+    strcpy(v->couleur, couleur);
+    v->heure_arrivee = time(NULL);
+    v->tarif_horaire = tarif;
+    v->statut = 1;
+    
+    parking->nombre_vehicules++;
+    parking->places_occupees++;
+    parking->total_entrees++;
+    
+    printf("Vehicule ajoute avec succes! ID: %d\n", v->id);
     return 1;
 }
 
-int supprimer_vehicle(Parking* p, int id) {
-    int i, j;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].id == id) {
-            for (j = i; j < p->nb_vehicles - 1; j++) {
-                p->vehicles[j] = p->vehicles[j + 1];
+int supprimer_vehicule(Parking *parking, char *plaque) {
+    int i;
+    for (i = 0; i < parking->nombre_vehicules; i++) {
+        if (strcmp(parking->vehicules[i].plaque, plaque) == 0) {
+            int j;
+            for (j = i; j < parking->nombre_vehicules - 1; j++) {
+                parking->vehicules[j] = parking->vehicules[j + 1];
             }
-            p->nb_vehicles--;
+            parking->nombre_vehicules--;
+            if (parking->vehicules[i].statut == 1) {
+                parking->places_occupees--;
+            }
+            printf("Vehicule supprime avec succes!\n");
             return 1;
         }
     }
+    printf("Erreur: Vehicule non trouve!\n");
     return 0;
 }
 
-int sortie_vehicle(Parking* p, int id, int heure_sortie) {
+Vehicule* rechercher_vehicule(Parking *parking, char *plaque) {
     int i;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].id == id && p->vehicles[i].statut == 1) {
-            int duree = heure_sortie - p->vehicles[i].heure_arrivee;
-            if (duree < 0) duree = 0;
-            float montant = duree * p->vehicles[i].tarif_horaire;
-            p->montant_total += montant;
-            p->vehicles[i].statut = 0;
-            p->total_sorties++;
-            printf("\nMontant a payer: %.2f euros\n", montant);
-            printf("Duree de stationnement: %d heures\n", duree);
-            return 1;
-        }
-    }
-    return 0;
-}
-
-Vehicle* rechercher_vehicle(Parking* p, char* plaque) {
-    int i;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (strcmp(p->vehicles[i].plaque, plaque) == 0) {
-            return &p->vehicles[i];
+    for (i = 0; i < parking->nombre_vehicules; i++) {
+        if (strcmp(parking->vehicules[i].plaque, plaque) == 0) {
+            return &parking->vehicules[i];
         }
     }
     return NULL;
 }
 
-void modifier_vehicle(Parking* p, int id, Vehicle v) {
+void afficher_vehicules_presents(Parking *parking) {
     int i;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].id == id) {
-            v.id = id;
-            p->vehicles[i] = v;
-            break;
+    int count = 0;
+    
+    printf("\n=== Liste des vehicules dans le parking ===\n");
+    for (i = 0; i < parking->nombre_vehicules; i++) {
+        if (parking->vehicules[i].statut == 1) {
+            afficher_vehicule(&parking->vehicules[i]);
+            count++;
         }
+    }
+    
+    if (count == 0) {
+        printf("Aucun vehicule dans le parking.\n");
+    } else {
+        printf("Total: %d vehicule(s)\n", count);
     }
 }
 
-void afficher_vehicles(Parking* p) {
-    int i;
-    printf("\n=== Liste des vehicules ===\n");
-    printf("%-5s %-15s %-15s %-15s %-10s %-10s %-10s\n", 
-           "ID", "Plaque", "Marque", "Couleur", "Arrivee", "Tarif/h", "Statut");
-    printf("--------------------------------------------------------------------------------\n");
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].statut == 1) {
-            printf("%-5d %-15s %-15s %-15s %-10d %-10.2f %-10s\n",
-                   p->vehicles[i].id,
-                   p->vehicles[i].plaque,
-                   p->vehicles[i].marque,
-                   p->vehicles[i].couleur,
-                   p->vehicles[i].heure_arrivee,
-                   p->vehicles[i].tarif_horaire,
-                   "Present");
-        }
+int enregistrer_sortie(Parking *parking, char *plaque) {
+    Vehicule *v = rechercher_vehicule(parking, plaque);
+    
+    if (v == NULL) {
+        printf("Erreur: Vehicule non trouve!\n");
+        return 0;
     }
+    
+    if (v->statut == 0) {
+        printf("Erreur: Ce vehicule est deja sorti!\n");
+        return 0;
+    }
+    
+    float montant = calculer_montant(v);
+    v->statut = 0;
+    parking->places_occupees--;
+    parking->revenu_total += montant;
+    parking->total_sorties++;
+    
+    printf("\n=== Sortie enregistree ===\n");
+    printf("Plaque: %s\n", v->plaque);
+    printf("Montant a payer: %.2f euros\n", montant);
+    printf("Revenu total: %.2f euros\n", parking->revenu_total);
+    
+    return 1;
 }
 
-int places_disponibles(Parking* p) {
-    int occupees = 0;
-    int i;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].statut == 1) {
-            occupees++;
-        }
-    }
-    return p->capacite_max - occupees;
+void afficher_places_disponibles(Parking *parking) {
+    int places_libres = MAX_PLACES - parking->places_occupees;
+    printf("\n=== Etat du parking ===\n");
+    printf("Places occupees: %d\n", parking->places_occupees);
+    printf("Places disponibles: %d\n", places_libres);
+    printf("Capacite totale: %d\n", MAX_PLACES);
 }
 
-int places_occupees(Parking* p) {
-    int occupees = 0;
-    int i;
-    for (i = 0; i < p->nb_vehicles; i++) {
-        if (p->vehicles[i].statut == 1) {
-            occupees++;
-        }
-    }
-    return occupees;
+void afficher_revenu_total(Parking *parking) {
+    printf("\n=== Revenu total ===\n");
+    printf("Montant collecte: %.2f euros\n", parking->revenu_total);
+}
+
+void afficher_menu_principal() {
+    printf("\n========================================\n");
+    printf("    GESTION DE PARKING INTELLIGENT\n");
+    printf("========================================\n");
+    printf("1. Gestion des vehicules\n");
+    printf("2. Statistiques\n");
+    printf("3. Quitter\n");
+    printf("========================================\n");
+    printf("Votre choix: ");
+}
+
+void afficher_menu_vehicules() {
+    printf("\n========================================\n");
+    printf("    GESTION DES VEHICULES\n");
+    printf("========================================\n");
+    printf("1. Ajouter un vehicule\n");
+    printf("2. Enregistrer une sortie\n");
+    printf("3. Supprimer un vehicule\n");
+    printf("4. Rechercher un vehicule\n");
+    printf("5. Afficher tous les vehicules\n");
+    printf("6. Afficher places disponibles\n");
+    printf("7. Retour au menu principal\n");
+    printf("========================================\n");
+    printf("Votre choix: ");
 }

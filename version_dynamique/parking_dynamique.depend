@@ -1,0 +1,65 @@
+# depslib dependency file v1.0
+1767814964 source:c:\users\dell\desktop\projetceya\version_dynamique\main.c
+	"parking.h"
+	"statistic.h"
+
+1767814964 c:\users\dell\desktop\projetceya\version_dynamique\parking.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"vehicule.h"
+
+1767814964 c:\users\dell\desktop\projetceya\version_dynamique\vehicule.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<math.h>
+
+1767814964 c:\users\dell\desktop\projetceya\version_dynamique\statistic.h
+	<stdio.h>
+	"parking.h"
+
+1767815446 source:c:\users\dell\desktop\projetceya\version_dynamique\parking.c
+	"parking.h"
+	"vehicule.h"
+
+1767814964 source:c:\users\dell\desktop\projetceya\version_dynamique\statistic.c
+	"statistic.h"
+
+1767815446 source:c:\users\dell\desktop\projetceya\version_dynamique\vehicule.c
+	"vehicule.h"
+
+1767814964 source:c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\main.c
+	"parking.h"
+	"statistic.h"
+
+1767814964 c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\parking.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"vehicule.h"
+
+1767814964 c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\vehicule.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<math.h>
+
+1767814964 c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\statistic.h
+	<stdio.h>
+	"parking.h"
+
+1767815446 source:c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\parking.c
+	"parking.h"
+	"vehicule.h"
+
+1767814964 source:c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\statistic.c
+	"statistic.h"
+
+1767815446 source:c:\users\eyabo\downloads\projetceya\projetceya\version_dynamique\vehicule.c
+	"vehicule.h"
+
